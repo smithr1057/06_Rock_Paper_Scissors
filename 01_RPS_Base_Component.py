@@ -72,7 +72,6 @@ while end_game == "no":
     # Start the game play loop
 
     # Rounds Heading
-    print()
     if rounds == "":
         heading = f"Continuous Mode: Round" \
                   f" {rounds_played + 1}"
@@ -81,6 +80,7 @@ while end_game == "no":
                   f" of {rounds}"
 
     print(heading)
+    print()
     choose_instruction = "Please choose rock, paper" \
                          ", scissors or 'xxx' to exit: "
     choose_error = "Please choose from rock / paper / " \
@@ -88,19 +88,35 @@ while end_game == "no":
 
     # Ask user for choice and check it's valid
     choose = choice_checker(choose_instruction, rps_list, choose_error)
+    print(f"You Chose {choose}")
 
-    # get computer choice
-    comp_choice = random.choice(rps_list[:-1])
-    print("Comp Choice", comp_choice)
-
-    # Compare choices
-    
     # End game if exit code is typed
     if choose == "xxx":
         break
 
+    # get computer choice
+    comp_choice = random.choice(rps_list[:-1])
+    print("Computer Chose", comp_choice)
+
+    # Compare choices
+    if choose == comp_choice:
+        result = "Its a draw"
+
+    elif choose == "rock" and comp_choice == "scissors":
+        result = "Congrats you won"
+
+    elif choose == "paper" and comp_choice == "rock":
+        result = "Congrats you won"
+
+    elif choose == "scissors" and comp_choice == "paper":
+        result = "Congrats you won"
+
+    else:
+        result = "You lost better luck next time)"
+
+    print(f"{result}")
+
     # rest of loop / game
-    print(f"You chose {choose}")
 
     rounds_played += 1
 
