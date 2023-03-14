@@ -49,19 +49,71 @@ def choice_checker(question, valid_list, error):
         print()
 
 
+def yes_no(question):
+    while True:
+        response = input(question).lower()
+        print()
+
+        if response == "yes" or response == "y":
+            response = "yes"
+            return response
+
+        elif response == "no" or response == "n":
+            response = "no"
+            return response
+        else:
+            print(" **ERROR** please enter either yes / no")
+            print()
+
+
+def instructions():
+    print("**** How to Play ****")
+    print()
+    print("Enter how many rounds you would like to play.")
+    print("Press <enter> for continuous mode.")
+    print("You can quit at any time by typing in 'xxx'.")
+    print("Choose rock, paper, scissors or r, p, s.")
+    print("You can choose to see your end game summary at the end of the game.")
+    print("Good luck and have fun :D")
+    print()
+    return ""
+
+
+def statement_generator(statement, decoration):
+
+    sides = decoration * 3
+
+    statement = f"{sides} {statement} {sides}"
+    top_bottom = decoration * len(statement)
+
+    print(top_bottom)
+    print(statement)
+    print(top_bottom)
+
+    return ""
+
+
 # Main Routine
 
 # List of valid responses
 yes_no_list = ["yes", "no"]
 rps_list = ["rock", "paper", "scissors", "xxx"]
 
+# Title
+statement_generator("Welcome to the Rock Paper Scissors Game", "*")
+print()
+
 # Ask user if they have played before
 # If 'yes', show instructions
+played_before = yes_no("Have you played the game before? ")
 
+if played_before == "no":
+    instructions()
 
 # Ask user for # of rounds then loop...
 rounds_played = 0
-
+rounds_lost = 0
+rounds_drawn = 0
 
 # Ask user for # of rounds, <enter> for infinite mode
 rounds = check_rounds()
@@ -76,8 +128,8 @@ while end_game == "no":
         heading = f"Continuous Mode: Round" \
                   f" {rounds_played + 1}"
     else:
-        heading = f"Round {rounds_played + 1}" \
-                  f" of {rounds}"
+        heading = f"*** Round {rounds_played + 1}" \
+                  f" of {rounds} ***"
 
     print(heading)
     print()
@@ -101,6 +153,7 @@ while end_game == "no":
     # Compare choices
     if choose == comp_choice:
         result = "Its a draw"
+        rounds_drawn += 1
 
     elif choose == "rock" and comp_choice == "scissors":
         result = "Congrats you won"
@@ -112,9 +165,14 @@ while end_game == "no":
         result = "Congrats you won"
 
     else:
-        result = "You lost better luck next time)"
+        result = "You lost better luck next time"
+        rounds_lost += 1
+
+    # Quick calculations
+    rounds_won = rounds_played - rounds_lost - rounds_drawn
 
     print(f"{result}")
+    print()
 
     # rest of loop / game
 
@@ -127,5 +185,29 @@ while end_game == "no":
 
 # Ask user if they want to see their game history
 # if 'yes' show game history
+game_summary = []
 
-# Show game statistics
+game_summary.append(result)
+
+rounds_won = rounds_played - rounds_lost - rounds_drawn
+
+# Calculate game stat
+percent_win = rounds_won / rounds_played * 100
+percent_lose = rounds_lost / rounds_played * 100
+percent_tie = rounds_drawn / rounds_played * 100
+
+# Shows game history
+
+print()
+print("***** Game History *****")
+for game in game_summary:
+    print(game)
+
+print()
+
+# displays game stats with % values to the nearest whole number
+print(" ***** Game Statistics *****")
+print(f"Win: {rounds_won}, {percent_win:.0f}% \nLoss: {rounds_lost}, "
+      f"{percent_lose:.0f}% \nTie: {rounds_drawn}, {percent_tie:.0f}%")
+
+print("Thanks for playing rock paper scissors")
