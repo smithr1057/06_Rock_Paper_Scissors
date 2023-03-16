@@ -98,6 +98,7 @@ def statement_generator(statement, decoration):
 # List of valid responses
 yes_no_list = ["yes", "no"]
 rps_list = ["rock", "paper", "scissors", "xxx"]
+game_summary = []
 
 # Title
 statement_generator("Welcome to the Rock Paper Scissors Game", "*")
@@ -115,6 +116,8 @@ rounds_played = 0
 rounds_lost = 0
 rounds_drawn = 0
 
+game_summary = []
+
 # Ask user for # of rounds, <enter> for infinite mode
 rounds = check_rounds()
 
@@ -125,8 +128,8 @@ while end_game == "no":
 
     # Rounds Heading
     if rounds == "":
-        heading = f"Continuous Mode: Round" \
-                  f" {rounds_played + 1}"
+        heading = f"*** Continuous Mode: Round" \
+                  f" {rounds_played + 1} ***"
     else:
         heading = f"*** Round {rounds_played + 1}" \
                   f" of {rounds} ***"
@@ -172,6 +175,8 @@ while end_game == "no":
     rounds_won = rounds_played - rounds_lost - rounds_drawn
 
     print(f"{result}")
+    outcome = f"Round {rounds_played + 1}: {result}"
+    game_summary.append(outcome)
     print()
 
     # rest of loop / game
@@ -182,32 +187,32 @@ while end_game == "no":
     if rounds_played == rounds:
         break
 
-
 # Ask user if they want to see their game history
 # if 'yes' show game history
-game_summary = []
+show_stats = yes_no("Would you like to see your end game history? ")
+if show_stats == "yes":
+    rounds_won = rounds_played - rounds_lost - rounds_drawn
 
-game_summary.append(result)
+    # Calculate game stat
+    percent_win = rounds_won / rounds_played * 100
+    percent_lose = rounds_lost / rounds_played * 100
+    percent_tie = rounds_drawn / rounds_played * 100
 
-rounds_won = rounds_played - rounds_lost - rounds_drawn
+    # Displays game history
+    print()
+    print("***** Game History *****")
+    for game in game_summary:
+        print(game)
 
-# Calculate game stat
-percent_win = rounds_won / rounds_played * 100
-percent_lose = rounds_lost / rounds_played * 100
-percent_tie = rounds_drawn / rounds_played * 100
+    print()
 
-# Shows game history
+
+    # displays game stats with % values to the nearest whole number
+    print(" ***** Game Statistics *****")
+    print(f"Win: {rounds_won}, {percent_win:.0f}% \nLoss: {rounds_lost}, "
+            f"{percent_lose:.0f}% \nTie: {rounds_drawn}, {percent_tie:.0f}%")
+elif rounds == 0:
+    print("You didnt play any games")
 
 print()
-print("***** Game History *****")
-for game in game_summary:
-    print(game)
-
-print()
-
-# displays game stats with % values to the nearest whole number
-print(" ***** Game Statistics *****")
-print(f"Win: {rounds_won}, {percent_win:.0f}% \nLoss: {rounds_lost}, "
-      f"{percent_lose:.0f}% \nTie: {rounds_drawn}, {percent_tie:.0f}%")
-
 print("Thanks for playing rock paper scissors")
