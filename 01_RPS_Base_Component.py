@@ -2,8 +2,9 @@ import random
 
 
 # Functions
-def check_rounds():
 
+# Asks users how many round they want to play
+def check_rounds():
     while True:
         response = input("How many rounds: ")
 
@@ -30,8 +31,8 @@ def check_rounds():
         return response
 
 
+# checks user answers with valid answer
 def choice_checker(question, valid_list, error):
-
     while True:
         # Ask user for choice (and put it in lowercase)
         response = input(question).lower()
@@ -49,23 +50,7 @@ def choice_checker(question, valid_list, error):
         print()
 
 
-def yes_no(question):
-    while True:
-        response = input(question).lower()
-        print()
-
-        if response == "yes" or response == "y":
-            response = "yes"
-            return response
-
-        elif response == "no" or response == "n":
-            response = "no"
-            return response
-        else:
-            print(" **ERROR** please enter either yes / no")
-            print()
-
-
+# Displays instructions
 def instructions():
     print("**** How to Play ****")
     print()
@@ -79,8 +64,8 @@ def instructions():
     return ""
 
 
+# Adds decorations to selected text
 def statement_generator(statement, decoration):
-
     sides = decoration * 3
 
     statement = f"{sides} {statement} {sides}"
@@ -96,17 +81,21 @@ def statement_generator(statement, decoration):
 # Main Routine
 
 # List of valid responses
-yes_no_list = ["yes", "no"]
+yes_no_list = ["yes", "no", "y", "n"]
 rps_list = ["rock", "paper", "scissors", "xxx"]
 game_summary = []
 
+# Error
+error = "Please enter either yes or no"
 # Title
 statement_generator("Welcome to the Rock Paper Scissors Game", "*")
 print()
 
 # Ask user if they have played before
 # If 'yes', show instructions
-played_before = yes_no("Have you played the game before? ")
+played_before = choice_checker("Have you played the game before? "
+                               , yes_no_list,
+                               error)
 
 if played_before == "no":
     instructions()
@@ -155,26 +144,33 @@ while end_game == "no":
 
     # Compare choices
     if choose == comp_choice:
-        result = "Its a draw"
+        result = "Tie"
         rounds_drawn += 1
 
     elif choose == "rock" and comp_choice == "scissors":
-        result = "Congrats you won"
+        result = "Won"
 
     elif choose == "paper" and comp_choice == "rock":
-        result = "Congrats you won"
+        result = "Won"
 
     elif choose == "scissors" and comp_choice == "paper":
-        result = "Congrats you won"
+        result = "Won"
 
     else:
-        result = "You lost better luck next time"
+        result = "Lost"
         rounds_lost += 1
 
     # Quick calculations
     rounds_won = rounds_played - rounds_lost - rounds_drawn
+    if result == "Lost":
+        print("You lost, better luck next time")
 
-    print(f"{result}")
+    elif result == "Won":
+        print("You won, congrats")
+
+    else:
+        print("Its a tie")
+
     outcome = f"Round {rounds_played + 1}: {result}"
     game_summary.append(outcome)
     print()
@@ -187,32 +183,42 @@ while end_game == "no":
     if rounds_played == rounds:
         break
 
-# Ask user if they want to see their game history
-# if 'yes' show game history
-show_stats = yes_no("Would you like to see your end game history? ")
-if show_stats == "yes":
-    rounds_won = rounds_played - rounds_lost - rounds_drawn
+# Checks user has played a round
+# Ask if they want to view game history
+if rounds_played > 1:
+    # Ask user if they want to see their game history
+    # if 'yes' show game history
+    show_stats = choice_checker("Would you like to see your"
+                                " end game history? "
+                                , yes_no_list, error)
 
-    # Calculate game stat
-    percent_win = rounds_won / rounds_played * 100
-    percent_lose = rounds_lost / rounds_played * 100
-    percent_tie = rounds_drawn / rounds_played * 100
+    # Calculate stats and print them out
+    if show_stats == "yes":
 
-    # Displays game history
+        rounds_won = rounds_played - rounds_lost - rounds_drawn
+
+        # Calculate game stat
+        percent_win = rounds_won / rounds_played * 100
+        percent_lose = rounds_lost / rounds_played * 100
+        percent_tie = rounds_drawn / rounds_played * 100
+
+        # Displays game history
+        print()
+        print("***** Game History *****")
+        for game in game_summary:
+            print(game)
+
+        print()
+
+        # displays game stats with % values to the nearest whole number
+        print(" ***** Game Statistics *****")
+        print(f"Win: {rounds_won}, {percent_win:.0f}% \nLoss: {rounds_lost}, "
+              f"{percent_lose:.0f}% \nTie: {rounds_drawn}, {percent_tie:.0f}%")
+
     print()
-    print("***** Game History *****")
-    for game in game_summary:
-        print(game)
+    print("Thanks for playing rock paper scissors :D")
 
-    print()
-
-
-    # displays game stats with % values to the nearest whole number
-    print(" ***** Game Statistics *****")
-    print(f"Win: {rounds_won}, {percent_win:.0f}% \nLoss: {rounds_lost}, "
-            f"{percent_lose:.0f}% \nTie: {rounds_drawn}, {percent_tie:.0f}%")
-elif rounds == 0:
-    print("You didnt play any games")
-
-print()
-print("Thanks for playing rock paper scissors")
+# If user hasn't played a round comment
+# Don't give them the option of game history
+elif rounds_played < 1:
+    print("Maybe play the game next time :)")
